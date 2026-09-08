@@ -1,0 +1,33 @@
+# Environment
+.env
+*.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/build/
+npm-debug.log*
+
+# Database
+*.sqlite3
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Experiment outputs (regenerable — keep the code, not the run artifacts)
+experiments/results/*
+!experiments/results/.gitkeep
