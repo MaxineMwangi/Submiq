@@ -122,3 +122,27 @@ The three false positives were S019, S022, and S024. Although all four fields co
 This highlights a limitation of presence-based completeness checking: populated fields are not necessarily meaningfully completed. The baseline remains focused on field presence. Detecting skipped answers, incomplete responses, and missing attachments requires additional validation rules.
 
 These results apply to the synthetic dataset and should not be interpreted as evidence of equivalent performance on real-world submissions.
+## Text Quality Module Evaluation
+
+The text quality module uses explainable, rule-based signals to assess text length, placeholder content, potentially exaggerated claims, specificity, informal wording, and repetition.
+
+### Evaluation results
+
+- Dataset: 120 synthetic submissions.
+- Accuracy: 50.00%.
+- Macro F1-score: 0.47.
+- Weighted F1-score: 0.48.
+
+| Actual label | Predicted Good | Predicted Fair | Predicted Poor |
+|---|---:|---:|---:|
+| Good | 34 | 9 | 1 |
+| Fair | 22 | 16 | 7 |
+| Poor | 8 | 13 | 10 |
+
+### Limitations
+
+The baseline shows partial agreement with the existing dataset labels but frequently confuses Good and Fair submissions. It should not be treated as a reliable standalone quality decision system.
+
+The rules are heuristic and the dataset is synthetic. Because the rules were refined using examples from this dataset, these results are exploratory rather than an independent measure of generalization. Further evaluation on a held-out dataset and human-reviewed examples is needed.
+
+The module does not detect AI authorship, verify factual claims, or replace human review.
