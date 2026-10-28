@@ -174,3 +174,35 @@ Confusion matrix (rows = actual, columns = predicted):
 These results are exploratory because the rules were refined using examples
 from the same synthetic dataset. The checker identifies warning signals; it
 does not establish whether claims are true or false. Human review is required.
+
+
+## AI-generated content detection
+
+Two exploratory approaches were evaluated against the synthetic dataset's
+`source` labels: a phrase-based heuristic and a TF-IDF + Logistic Regression
+classifier.
+
+### TF-IDF + Logistic Regression
+
+- Selected configuration: `{'ngram_range': [1, 1], 'min_df': 1, 'C': 0.1}`
+- Validation macro F1: 0.839
+- Held-out test accuracy: 0.917
+- Held-out test macro F1: 0.600
+
+The test set contained 12 records: 9 Human, 2 AI, and 1 Mixed. The classifier
+correctly classified all Human and AI records, but misclassified the sole
+Mixed record as AI. Consequently, the Mixed-class recall was 0.00. Results
+are highly uncertain because the held-out test set is small.
+
+The validation set was used to select the TF-IDF configuration. The selected
+configuration was then retrained on the combined development and validation
+sets before evaluation on the held-out test set.
+
+### Limitations
+
+The `source` column records how the synthetic examples were constructed; it
+does not independently establish whether real text was AI-generated. Both
+approaches are experimental baselines, not proof of authorship. Synthetic
+data, a small test set, and limited examples per class restrict the conclusions
+that can be drawn. The results should not be presented as evidence of reliable
+real-world AI-content detection.
