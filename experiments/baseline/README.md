@@ -146,3 +146,31 @@ The baseline shows partial agreement with the existing dataset labels but freque
 The rules are heuristic and the dataset is synthetic. Because the rules were refined using examples from this dataset, these results are exploratory rather than an independent measure of generalization. Further evaluation on a held-out dataset and human-reviewed examples is needed.
 
 The module does not detect AI authorship, verify factual claims, or replace human review.
+
+
+## Plausibility Checker
+
+The plausibility baseline uses predefined rules to flag absolute claims,
+extreme achievements, numerical claims, and possible contradictions between
+a submission bio and questionnaire response.
+
+Evaluation on the 120-record synthetic dataset:
+
+- Accuracy: 95.00%
+- Macro F1-score: 0.95
+- Plausible precision: 0.94
+- Plausible recall: 0.99
+- Implausible precision: 0.98
+- Implausible recall: 0.89
+- Implausible F1-score: 0.93
+
+Confusion matrix (rows = actual, columns = predicted):
+
+| | Predicted Plausible | Predicted Implausible |
+|---|---:|---:|
+| Actual Plausible | 74 | 1 |
+| Actual Implausible | 5 | 40 |
+
+These results are exploratory because the rules were refined using examples
+from the same synthetic dataset. The checker identifies warning signals; it
+does not establish whether claims are true or false. Human review is required.
