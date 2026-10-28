@@ -109,3 +109,16 @@ Run the baseline from the project root:
 
 ```text
 python experiments/baseline/completeness_baseline.py
+## Completeness Module Evaluation
+
+The completeness module was evaluated against the 120-submission synthetic dataset using four required fields: experience level, skills, bio, and questionnaire response.
+
+- **Accuracy:** 97.50% (117/120)
+- **False positives:** 3
+- **False negatives:** 0
+
+The three false positives were S019, S022, and S024. Although all four fields contained text, the responses indicated skipped answers, incomplete information, or missing supporting evidence.
+
+This highlights a limitation of presence-based completeness checking: populated fields are not necessarily meaningfully completed. The baseline remains focused on field presence. Detecting skipped answers, incomplete responses, and missing attachments requires additional validation rules.
+
+These results apply to the synthetic dataset and should not be interpreted as evidence of equivalent performance on real-world submissions.
