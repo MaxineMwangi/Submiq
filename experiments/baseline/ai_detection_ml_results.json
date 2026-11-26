@@ -1,0 +1,84 @@
+{
+  "method": "TF-IDF + Logistic Regression",
+  "labels": [
+    "Human",
+    "AI",
+    "Mixed"
+  ],
+  "selected_configuration": {
+    "ngram_range": [
+      1,
+      1
+    ],
+    "min_df": 1,
+    "C": 0.1
+  },
+  "validation_macro_f1": 0.8389780154486036,
+  "test_accuracy": 0.9166666666666666,
+  "test_macro_f1": 0.6,
+  "test_classification_report": {
+    "Human": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 9.0
+    },
+    "AI": {
+      "precision": 0.6666666666666666,
+      "recall": 1.0,
+      "f1-score": 0.8,
+      "support": 2.0
+    },
+    "Mixed": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 1.0
+    },
+    "accuracy": 0.9166666666666666,
+    "macro avg": {
+      "precision": 0.5555555555555555,
+      "recall": 0.6666666666666666,
+      "f1-score": 0.6,
+      "support": 12.0
+    },
+    "weighted avg": {
+      "precision": 0.8611111111111112,
+      "recall": 0.9166666666666666,
+      "f1-score": 0.8833333333333333,
+      "support": 12.0
+    }
+  },
+  "test_confusion_matrix": [
+    [
+      9,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      0
+    ],
+    [
+      0,
+      1,
+      0
+    ]
+  ],
+  "test_submission_ids": [
+    "S097",
+    "S071",
+    "S044",
+    "S021",
+    "S009",
+    "S058",
+    "S001",
+    "S034",
+    "S037",
+    "S042",
+    "S078",
+    "S014"
+  ],
+  "note": "Exploratory results on a small synthetic dataset. Source labels describe dataset construction and do not prove AI authorship. Test results may be unstable with few examples."
+}

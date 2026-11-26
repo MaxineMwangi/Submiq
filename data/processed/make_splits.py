@@ -1,50 +1,51 @@
-"""
-Splits data/raw/submiq_dataset.csv into development (70%), validation (20%),
-and test (10%) sets, stratified by expected_verdict so all three splits keep
-a representative mix of Verified / Needs Improvement / Flagged examples.
+﻿from pathlib import Path
+import pandas as pd
+from sklearn.model_selection import train_test_split
 
-Run from data/processed/:  python make_splits.py
-"""
+BASE_DIR = Path(__file__).resolve().parents[2]
+DATA_PATH = BASE_DIR / "data" / "processed" / "submiq_dataset_processed.csv"
+OUTPUT_DIR = BASE_DIR / "data" / "processed"
+SEED = 42
 
-import csv
-import random
-from collections import defaultdict
-from pathlib import Path
+df = pd.read_csv(DATA_PATH)
 
-random.seed(42)  # fixed seed — matches generator, required for reproducibility
+required = {"submission_id", "source"}
+if not required.issubset(df.columns):
+    raise ValueError(f"Dataset must contain {sorted(required)}")
 
-RAW_PATH = Path(__file__).parent.parent / "raw" / "submiq_dataset.csv"
-SPLITS = {"development": 0.70, "validation": 0.20, "test": 0.10}
+if len(df) != 120 or df["submission_id"].duplicated().any():
+    raise ValueError("Expected 120 rows with unique submission IDs.")
 
+# First reserve 12 test records, stratified by source.
+development_validation, test = train_test_split(
+    df,
+    test_size=12,
+    random_state=SEED,
+    stratify=df["source"],
+)
 
-def main():
-    with open(RAW_PATH, encoding="utf-8") as f:
-        rows = list(csv.DictReader(f))
+# Split the remaining 108 into 84 development and 24 validation.
+development, validation = train_test_split(
+    development_validation,
+    test_size=24,
+    random_state=SEED,
+    stratify=development_validation["source"],
+)
 
-    by_verdict = defaultdict(list)
-    for row in rows:
-        by_verdict[row["expected_verdict"]].append(row)
+splits = {
+    "development": development,
+    "validation": validation,
+    "test": test,
+}
 
-    out = {name: [] for name in SPLITS}
-    for verdict, group in by_verdict.items():
-        random.shuffle(group)
-        n = len(group)
-        n_dev = round(n * SPLITS["development"])
-        n_val = round(n * SPLITS["validation"])
-        out["development"] += group[:n_dev]
-        out["validation"] += group[n_dev:n_dev + n_val]
-        out["test"] += group[n_dev + n_val:]
+all_ids = []
+for name, split_df in splits.items():
+    split_df.to_csv(OUTPUT_DIR / f"{name}.csv", index=False)
+    all_ids.extend(split_df["submission_id"].tolist())
+    print(f"\n{name.upper()}: {len(split_df)} rows")
+    print(split_df["source"].value_counts().to_string())
 
-    fieldnames = rows[0].keys()
-    for name, split_rows in out.items():
-        random.shuffle(split_rows)
-        path = Path(__file__).parent / f"{name}.csv"
-        with open(path, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(split_rows)
-        print(f"{name}: {len(split_rows)} rows -> {path.name}")
+if len(all_ids) != 120 or len(set(all_ids)) != 120:
+    raise ValueError("Split validation failed: records are missing or duplicated.")
 
-
-if __name__ == "__main__":
-    main()
+print("\nAll 120 records are preserved exactly once.")
